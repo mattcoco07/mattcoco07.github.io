@@ -1,0 +1,34 @@
+pour faire spawm des images il faudrait faire en sort que quand je clique il recupere la possition de la souris et fasse spawm une image au meme endrois; ok
+
+
+enmis spawm a ~649 px; ok
+
+la fonction collision doit empecher le spawn de nos troupe sur une autre; ok
+
+je dervrait faire aussi en sorte que mes troupe ne puisse pas spawn sur la route
+
+Faire en sorte que quand j'appuie sur le bouton commencer je peux plus faire spawn de troupe; ok
+
+les clone spawm a 118 x quand il arrive a 115 Y; ok
+
+
+je dois faire un truc avec y = 125 pour le dernier trajet; ok
+
+
+
+je dois faire en sort de calculer la distence des troupe allier et ennemis.
+
+
+je dois faire en sorte que les allier tire et si j'ai du temps aussi l'inverse
+
+et si j'ai beaucoup de temps un systeme de pris des troupes.
+
+
+Il faut faire en sorte que les ennemis tire sur nos troupe
+
+
+
+
+tout ce qui est en haut est fait
+
+Si j'ai le temps je peux faire en sorte que je gagne si je resiste 2 minutes,

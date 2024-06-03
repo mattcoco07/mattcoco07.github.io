@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>game</title>
+    <link rel="stylesheet" href="css/game.css">
+</head>
+
+<body>
+    <p id="I_timer">timer : 120</p>
+    <div id="Battaille">
+        <div id="ennemis">
+
+        </div>
+
+        <img src="img/decors/fond.png" alt="fond de la map" id="fond" style="position: relative;">
+
+        <div id="allier">
+            <div id="shoots">
+
+            </div>
+        </div>
+    </div>
+    <div id="info">
+        <div style="border: 2px solid gray; border-radius: 18px;">
+            <div id="choixTrp">
+                <img src="img/csi/b1.png" alt="b1"
+                    style="height: 25px; width: 25px; border: 2px solid rgb(148, 147, 147);" onclick="choixTroupe(1)">
+                <img src="img/csi/J-2-Autonomous-Proton-cannon.png" alt="J-2-Autonomous-Proton-cannon"
+                    style="height: 25px; width: 25px; border: 2px solid rgb(148, 147, 147);" onclick="choixTroupe(2)">
+            </div>
+        </div>
+        <!-- <input type="button" id="startFight" name="startFight" value="commencer"> -->
+        <P id="I_AutoStart">commencer dans : 3</P>
+    </div>
+
+</body>
+<script>
+
+    function choixCamp() {
+        // à faire plus tard
+    }
+
+    let troupe = 1;
+
+    function choixTroupe(t) {
+        troupe = t;
+    }
+
+    function timer() {
+
+        let time = 120
+
+        setInterval(() => {
+            time = time - 1;
+
+            I_timer.innerHTML = "timer : " + time;
+
+            if (time == 0) {
+                clearInterval(ennemis.children.move);
+                clearInterval(allier.children.shoot);
+                clearInterval(ennemis.children.shoot);
+                alert("vous avez gagner");
+                location.reload();
+            }
+
+        }, 1000)
+
+    }
+
+    function AutoStart() {
+
+        let autostart = 3;
+
+        setInterval(() => {
+            autostart = autostart - 1;
+            I_AutoStart.innerHTML = "commencer dans : " + autostart;
+            if (autostart == 0) {
+                spawnEnmis()
+                I_AutoStart.hidden = true
+            }
+        }, 1000)
+
+
+    }
+
+    AutoStart();
+
+
+    setInterval(() => {
+        for (i = 0; i < shoots.children.length; i++) {
+            shoots.children[i].temps++;
+            if (shoots.children[i].temps > 3) {
+                shoots.removeChild(shoots.children[i]);
+            }
+        }
+    }, 100)
+
+
+    function spawnTroup() {
+
+        fond.addEventListener('click', function (event) {
+
+
+
+            var mouseX = event.clientX - Battaille.offsetLeft - 17;
+            var mouseY = event.clientY - Battaille.offsetTop - 17;
+
+            console.log('Position de la souris - X: ' + mouseX + ', Y: ' + mouseY);
+
+
+            var img = document.createElement('img');
+
+            let soldat;
+
+            switch (troupe) {
+                case 1:
+                    soldat = "b1";
+                    img.vie = 20;
+                    img.degat = 10;
+                    break;
+                case 2:
+                    soldat = "J-2-Autonomous-Proton-cannon";
+                    img.vie = 200;
+                    img.degat = 25;
+                    break;
+            }
+
+
+            img.src = 'img/csi/' + soldat + '.png';
+            img.className = "droide";
+            img.alt = 'droide ' + soldat;
+            img.width = "35"
+            img.height = "35";
+            img.style.position = "absolute";
+            img.style.top = mouseY + "px";
+            img.style.left = mouseX + "px";
+            img.style.zIndex = 10;
+
+
+            setTimeout(() => {
+
+
+                img.shoot = setInterval(() => {
+                    let XA = img.offsetLeft + img.clientWidth / 2;
+                    let YA = img.offsetTop + img.clientHeight / 2;
+
+                    for (i = 0; i < ennemis.children.length; i++) {
+                        let XE = ennemis.children[i].offsetLeft + ennemis.children[i].clientWidth / 2;
+                        let YE = ennemis.children[i].offsetTop + ennemis.children[i].clientHeight / 2;
+
+                        //d = racine carrer de (XA - XE)2 (carrer) (YA-YE)2
+                        let d = Math.sqrt((XA - XE) ** 2 + (YA - YE) ** 2);
+
+                        //console.log(" XA "+ XA + " YA " + YA + " XE " + XE + " YE " + YE);
+                        if (d < 100) {
+                            console.log("touche");
+                            ennemis.children[i].vie = ennemis.children[i].vie - img.degat;//la j'essaie de mettre soldat.degat au lieux de 10
+
+                            DX = XA - XE;
+                            DY = YA - YE;
+                            Angle = Math.atan2(DY, DX);
+                            Angle *= 180 / Math.PI;//convertie de radian en degré
+
+                            var shootA = document.createElement('div');
+                            shootA.style.backgroundColor = "red";
+                            shootA.style.borderRadius = "10px";
+                            shootA.style.width = d + "px";
+                            shootA.style.height = "5px";
+                            shootA.style.position = "absolute";
+                            shootA.style.left = XA + "px";
+                            shootA.style.top = YA + "px";
+                            shootA.style.zIndex = 11;
+                            shootA.style.transformOrigin = "0% 0%";
+                            shootA.style.transform = "rotate(" + (Angle - 180) + "deg)";
+                            shootA.temps = 0;
+                            shoots.appendChild(shootA);
+
+                        }
+
+                        if (ennemis.children[i].vie <= 0) {
+                            clearInterval(ennemis.children[i].move);
+                            ennemis.removeChild(ennemis.children[i])
+                        }
+                    }
+                }, 1000)
+
+            }, 500)
+
+            allier.appendChild(img);
+        });
+    }
+
+
+    // à faire
+    function spawnEnmis() {
+
+        timer();
+
+        var creationEnemis = setInterval(() => {
+
+
+            let troupEnnemis = Math.floor(Math.random() * 2) + 1;
+            console.log(troupEnnemis);
+            let soldatE;
+
+            var ennmis = document.createElement('img')
+
+
+            switch (troupEnnemis) {
+                case 1:
+                    soldatE = "clone.png";
+                    ennmis.vie = 20;
+                    ennmis.degat = 10;
+                    ennmis.width = "35";
+                    ennmis.height = "35";
+                    //faire les dégats car il doivent tirer
+                    break;
+                case 2:
+                    soldatE = "rttt.png";
+                    ennmis.vie = 200;
+                    ennmis.degat = 30;
+                    ennmis.width = "50";
+                    ennmis.height = "35";
+                    ennmis.style.transform = "scaleX(-1)";
+                    break;
+            }
+
+
+            // a remplacer l'image la c un teste
+            ennmis.src = 'img/republic/' + soldatE;
+            ennmis.className = "clone"
+            ennmis.style.left = '260px';
+            ennmis.style.position = "absolute"
+            ennmis.style.zIndex = 10;
+            ennemis.appendChild(ennmis)
+
+
+            //partie pour faire bouger les troupe
+
+            let pV = 0; //position vertical
+            let pH = 260; //postition horizontal
+            let v = 0.5; //vitesse à remettre à 0.5
+
+            ennmis.move = setInterval(() => {
+                if (pV <= 115) {
+                    ennmis.style.top = pV + "px";
+                    pV = pV + v;
+                }
+
+                if (pV >= 115) {
+                    ennmis.style.top = 115 + "px";
+                    ennmis.style.left = pH + "px";
+                    pH = pH + v;
+
+                }
+
+                if (pH >= 625) {
+                    ennmis.style.left = 625 + "px";
+                    ennmis.style.top = pV + "px";
+                    pV = pV + v;
+                }
+
+
+                if (pV >= 402) {
+                    console.log("gateau")
+                    clearInterval(ennmis.move);
+                    clearInterval(creationEnemis);
+                    alert("vous avez perdu");
+                    location.reload();
+                }
+
+            }, 10) //10
+
+
+
+            ennmis.shoot = setInterval(() => {
+                let XA = ennmis.offsetLeft + ennmis.clientWidth / 2;
+                let YA = ennmis.offsetTop + ennmis.clientHeight / 2;
+
+                for (i = 0; i < allier.children.length; i++) {
+                    let XE = allier.children[i].offsetLeft + allier.children[i].clientWidth / 2;
+                    let YE = allier.children[i].offsetTop + allier.children[i].clientHeight / 2;
+
+                    //d = racine carrer de (XA - XE)2 (carrer) (YA-YE)2
+                    let d = Math.sqrt((XA - XE) ** 2 + (YA - YE) ** 2);
+
+                    //console.log(" XA "+ XA + " YA " + YA + " XE " + XE + " YE " + YE);
+                    if (d < 125) {
+                        console.log("touche de l'enemis");
+                        allier.children[i].vie = allier.children[i].vie - ennmis.degat;//la j'essaie de mettre soldat.degat au lieux de 10
+
+                        DX = XA - XE;
+                        DY = YA - YE;
+                        Angle = Math.atan2(DY, DX);
+                        Angle *= 180 / Math.PI;//convertie de radian en degré
+
+                        var shootE = document.createElement('div');
+                        shootE.style.backgroundColor = "blue";
+                        shootE.style.borderRadius = "10px";
+                        shootE.style.width = d + "px";
+                        shootE.style.height = "5px";
+                        shootE.style.position = "absolute";
+                        shootE.style.left = XA + "px";
+                        shootE.style.top = YA + "px";
+                        shootE.style.zIndex = 11;
+                        shootE.style.transformOrigin = "0% 0%";
+                        shootE.style.transform = "rotate(" + (Angle - 180) + "deg)";
+                        shootE.temps = 0;
+                        shoots.appendChild(shootE);
+
+                    }
+
+                    if (allier.children[i].vie <= 0) {
+                        clearInterval(allier.children[i].shoot);
+                        allier.removeChild(allier.children[i])
+                    }
+                }
+
+            }, 500)
+
+
+        }, 1000)// a remettre 3000
+    }
+
+
+    //à continuer avec les instruction du cahier des charger
+    // startFight.addEventListener('click', () => spawnEnmis());
+
+    spawnTroup();
+
+
+</script>
+
+</html>

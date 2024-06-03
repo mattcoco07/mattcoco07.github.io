@@ -1,0 +1,32 @@
+body{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+#Battaille{
+    width: 850px;
+    height: 416px;
+    border: solid;
+    border-width: 8px;
+    border-color: rgb(37, 36, 36);
+    border-radius: 18px;
+    position: relative;
+    align-items: center;
+    /* background-image: url(../img/decors/fond.png); */
+}
+
+#fond{
+    width: 850px;
+    /* border: 8px, solid, black; */
+    border-radius: 9px;
+} 
+
+.droide{
+    /* position: relative; */
+}
+
+.clone{
+    /* position: relatie; */
+}

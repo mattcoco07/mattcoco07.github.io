@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="Onglet1">
+        <input type="button" id="BtnStart" name="BtnStart" onclick="affiche()" value="start">
+    </div>
+    <div id="Onglet2" hidden>
+        <p>Choix du camp</p>
+        <select name="camps" id="camps" required>
+            <option disabled selected>Choisisez un camps</option>
+            <option value="CSI">CSI</option>
+            <option value="Republique">Republique</option>
+        </select>
+
+        <a href="game.html"><input type="button" name="Start" id="Start" value="commencer"></a>
+    </div>
+</body>
+<script>
+    function affiche(){
+        Onglet1.hidden = true;
+        Onglet2.hidden = false;
+    }
+
+    
+
+</script>
+</html>
